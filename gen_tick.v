@@ -1,9 +1,9 @@
 //=========================================================================
 // Name & Email must be EXACTLY as in Gradescope roster!
-// Name: 
-// Email: 
+// Name: Rosendo Marquez
+// Email: rmarq030@ucr.edu
 // 
-// Assignment name: 
+// Assignment name:  Lab 01 - Clocks and Test Benches
 // Lab section: 
 // TA: 
 // 
@@ -19,13 +19,29 @@ module gen_tick # ( parameter SRC_FREQ = 5000, parameter TICK_FREQ = 1) (
     output tick
 );
 
-// Declare registers and wires here
+    // # clock cycles for one tick - SRC_FREQ / TICK_FREQ
+    // to have the number of cycle we get (1/2) * SRC_FREQ / TICK_FREQ 
+    // subtract when 1 as 0 starts
 
-always @(posedge src_clk) begin
-    // put your code for the multiplier here
-end
+    integer counter_size = (SRC_FREQ / (2*TICK_FREQ));
+    reg output_tick = 0; 
+    integer counter = 0; 
 
-// Change this assign statement to the actual tick value
-assign tick = src_clk;
+    always @(posedge src_clk) begin
+        if (enable) begin
+            if (counter >= counter_size) 
+            begin
+                //reset counter and flip output bit
+                //non blocking logic 
+                counter <= 1;
+                output_tick <= ~output_tick; 
+            end 
+            else
+             begin
+                counter <= counter + 1;
+            end
+        end
+    end
+    assign tick = output_tick;
 
 endmodule
